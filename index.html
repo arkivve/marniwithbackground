@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARNI 26 S/S Living Collections</title>
+
+<link rel="icon" type="image/png" href="./mlogo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Futura', 'Jost', sans-serif;
+    /* 스크롤 활성화 */
+  }
+  .page-section { width: 100%; }
+
+  /* ========================================================= */
+  /* ====== 3D HERO SECTION (C, 1) ====== */
+  /* ========================================================= */
+  
+  /* ====== 3D 캔버스 (배경 고정) ====== */
+  #c {
+    /* FIXED로 설정하여 스크롤해도 캔버스가 화면에 고정됨 */
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; 
+    display: block;
+    z-index: 1; /* 캔버스는 배경 역할 */
+  }
+
+  /* ====== 1. HERO 섹션 (첫 뷰포트 영역) ====== */
+  .section-hero {
+    background: transparent; 
+    color: #ffffff; 
+    height: 100vh; /* 첫 뷰포트 크기 유지 */
+    position: relative; 
+    z-index: 3; /* UI가 캔버스 위에 오도록 */
+    display: flex;
+    flex-direction: column;
+    padding: 0 60px;
+  }
+
+  .top-bar {
+    width: 100%;
+    margin: 0 auto;
+    padding: 15px 20px 0 0; 
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 19px;
+  }
+  .top-left-title { font-weight: 550; margin-bottom: 20px; }
+  .top-left-menu { display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+  .top-center-title { flex: 1; text-align: center; font-weight: 700; letter-spacing: 1px; }
+  
+  /* --- 하단 텍스트 & 말풍선 컨테이너 --- */
+  .hero-bottom {
+    width: 100%; 
+    margin: 0 auto;
+    padding: 0 0 30px 0; 
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 15px;
+    position: relative; 
+  }
+  
+  /* ====== 말풍선 그룹 스타일 (간격 띄우기 수정 적용) ====== */
+  .pill-group {
+      display: flex; 
+      align-items: flex-start; 
+      position: relative; 
+      width: 300px; 
+      height: 60px;
+  }
+
+  /* 개별 말풍선 스타일 */
+  .pill { 
+      border: 1.5px solid #ffffff; 
+      background: transparent; 
+      color: #ffffff; 
+      padding: 8px 18px; 
+      border-radius: 50px; 
+      white-space: nowrap; 
+      font-size: 15px; 
+      font-weight: 500;
+      position: relative; 
+      transform: rotate(-5deg); 
+      margin-right: -8px; 
+      z-index: 1; 
+  }
+
+  /* 각 개별 pill에 대한 미세 조정 (간격 및 각도) */
+  .pill:nth-child(1) { transform: rotate(-10deg); z-index: 4; }
+  .pill:nth-child(2) { transform: rotate(-2deg); margin-left: -2px; z-index: 3; }
+  .pill:nth-child(3) { transform: rotate(5deg); margin-right: -10px; margin-left: -2px; z-index: 2; }
+  .pill:nth-child(4) { transform: rotate(-8deg); margin-left: 0; z-index: 1; }
+  
+  .hero-copy { color: #ffffff; line-height: 1.5; }
+  
+  /* ========================================================= */
+  /* ====== 2. PATTERN SECTION ====== */
+  /* ========================================================= */
+  .section-pattern {
+    /* 배경색을 제거하거나 투명하게 설정합니다. */
+    background: transparent; 
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding-bottom: 80px;
+    position: relative; 
+    z-index: 5; /* 캔버스 위에 표시되도록 */
+  }
+
+  .pattern-inner {
+    width: 100%;
+    max-width: 900px;
+    margin: 60px auto 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1.pattern-title {
+    margin: 40px 0 20px;
+    font-size: 20px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  #patternCanvas {
+    margin: 20px 0 30px;
+    border: none;
+    background: white;
+    display: block;
+    max-width: 100%;
+  }
+
+  #startBtn {
+    padding: 18px 60px;
+    font-size: 18px;
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  #startBtn:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  /* 새로 추가된 다운로드 버튼 스타일 */
+  #downloadBtn {
+    display: none; 
+    margin-top: 20px;
+    padding: 12px 30px;
+    font-size: 14px;
+    font-weight: 700;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  #downloadBtn:hover {
+    background: #e0e0e0;
+  }
+
+  #controlPanel {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 900px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    transition: 0.3s ease;
+  }
+
+  .box-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .box {
+    background: #111;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+
+  .grad-box {
+    background: #1a1a1a;
+    border: 1px solid #777;
+  }
+
+  button.ctrl-btn {
+    padding: 8px 14px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  label { color: #ddd; }
+  input[type="color"], input[type="range"] { cursor: pointer; }
+
+
+  /* ========================================================= */
+  /* ====== 3. COLLECTION SECTION ====== */
+  /* ========================================================= */
+  .section-collection {
+    /* 배경색을 제거하거나 투명하게 설정합니다. */
+    background: transparent; 
+    color: #111111;
+    padding: 100px 20px 140px;
+    position: relative; 
+    z-index: 5; 
+  }
+
+  .collection-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .collection-title {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 60px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
+  /* 그리드 시스템 */
+  .grid-row-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 60px;
+  }
+  
+  .grid-row-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 60px;
+  }
+
+  @media (max-width: 768px) {
+    .grid-row-3, .grid-row-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .col-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .img-wrapper {
+    width: 100%;
+    background-color: transparent; 
+    border-radius: 40px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+  }
+  
+  .img-wrapper:hover {
+    transform: translateY(-5px);
+  }
+
+  .img-wrapper img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain; 
+    aspect-ratio: 1 / 1.1; 
+  }
+  
+  .grid-row-2 .img-wrapper img {
+    aspect-ratio: 4 / 3;
+    object-fit: contain; 
+  }
+
+  .item-name {
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+
+<body>
+<canvas id="c"></canvas>
+
+<section class="page-section section-hero">
+  <header class="top-bar">
+    <div>
+      <div class="top-left-title">Explore</div>
+      <div class="top-left-menu">
+        <span>Make your Marni</span>
+        <span>About</span>
+        <span>Marni House</span>
+      </div>
+    </div>
+    <div class="top-center-title">
+        MARNI 26 S/S LIVING COLLECTIONS
+    </div>
+    <div style="width:98px;"></div>
+  </header>
+  
+  <div style="flex-grow: 1;"></div> 
+
+  <div class="hero-bottom">
+    <div class="pill-group">
+      <div class="pill">Cozy</div>
+      <div class="pill">Geometry</div>
+      <div class="pill">Creative</div>
+      <div class="pill">Pattern</div>
+    </div>
+    <div class="hero-copy">
+      The Gentle Geometry of Home,<br>
+      Find Your Cozy Corner in Every Weave.
+    </div>
+  </div>
+</section>
+
+<section class="page-section section-pattern">
+  <div class="pattern-inner">
+    <h1 class="pattern-title">MAKE YOUR MARNI PATTERN!</h1>
+
+    <canvas id="patternCanvas"></canvas>
+
+    <button id="startBtn">GET STARTED ▶</button>
+
+    <button id="downloadBtn">DOWNLOAD PATTERN ↓</button>
+
+    <div id="controlPanel">
+      <div class="box-row">
+        <div class="box">
+          <span>Solid Color Mode:</span>
+          <label>Ellipse <input type="color" id="ellipsePick" value="#22304C"></label>
+          <label>Circle <input type="color" id="circlePick" value="#536DA5"></label>
+        </div>
+
+        <div class="box grad-box">
+          <span>Gradient:</span>
+          <label>Start <input type="color" id="gradStartPick" value="#ff9a9e"></label>
+          <label>Middle <input type="color" id="gradMidPick" value="#ffffff"></label>
+          <label>End <input type="color" id="gradEndPick" value="#fecfef"></label>
+        </div>
+      </div>
+
+      <div class="box">
+        <label>Ellipse Size <input type="range" id="ellipseSize" min="0.1" max="2.0" step="0.1" value="1.0"></label>
+        <label>Circle Size <input type="range" id="circleSize" min="0.1" max="2.0" step="0.1" value="1.0"></label>
+      </div>
+    </div>
+  </div>
+</section> 
+
+<section class="page-section section-collection">
+  <div class="collection-container">
+    <h2 class="collection-title">MARNI 26 S/S<br>LIVING COLLECTIONS</h2>
+
+    <div class="grid-row-3">
+      <div class="col-item">
+        <div class="img-wrapper">
+          <img src="./images/TUBE CHAIR.png" alt="Tube Chair"> 
+        </div>
+        <div class="item-name">Tube Chair</div>
+      </div>
+
+      <div class="col-item">
+        <div class="img-wrapper">
+          <img src="./images/STOOL.png" alt="Stool">
+        </div>
+        <div class="item-name">Stool</div>
+      </div>
+
+      <div class="col-item">
+        <div class="img-wrapper">
+          <img src="./images/ROUND CUSHION CHAIR.png" alt="Round Cushion Chair">
+        </div>
+        <div class="item-name">Round Cushion Chair</div>
+      </div>
+    </div>
+
+    <div class="grid-row-2">
+      <div class="col-item">
+        <div class="img-wrapper">
+          <img src="./images/SOFA.png" alt="Sofa">
+        </div>
+        <div class="item-name">Sofa</div>
+      </div>
+      <div class="col-item">
+        <div class="img-wrapper">
+          <img src="./images/WALL.png" alt="Fabric Wall Sculpture">
+        </div>
+        <div class="item-name">Fabric Wall Sculpture</div>
+      </div>
+    </div>
+
+    <div class="grid-row-2">
+      <div class="col-item">
+        <div class="img-wrapper">
+          <img src="./images/BLANKET.png" alt="Blanket">
+        </div>
+        <div class="item-name">Blanket</div>
+      </div>
+      <div class="col-item">
+        <div class="img-wrapper">
+          <img src="./images/CARPET.png" alt="Carpet">
+        </div>
+        <div class="item-name">Carpet</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://threejs.org/build/three.module.js",
+            "three/addons/": "https://threejs.org/examples/jsm/"
+        }
+    }
+</script>
+
+<script type="module">
+/* ---------------- 3D MARNI LOGO JS ---------------- */
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'; 
+
+        function main() {
+
+            const canvas = document.querySelector( '#c' );
+            const renderer = new THREE.WebGLRenderer( { antialias: true, canvas } );
+
+            const fov = 75;
+            const aspect = 2; 
+            const near = 0.1;
+            const far = 100;
+            const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+            camera.position.z = 3; 
+            
+            const scene = new THREE.Scene();
+            const cubes = []; 
+            let mouseX = 0, mouseY = 0; 
+            
+            // --- 마우스 이벤트 리스너 ---
+            window.addEventListener( 'mousemove', (event) => {
+                mouseX = ( event.clientX / window.innerWidth ) * 1.0 - 0.5;
+                mouseY = ( event.clientY / window.innerHeight ) * 1.0 - 0.5;
+            });
+            
+            // 광원 설정
+            {
+                const color = 0xFFFFFF;
+                const intensity = 3;
+                const light = new THREE.DirectionalLight( color, intensity );
+                light.position.set( - 1, 2, 4 );
+                scene.add( light );
+            }
+            
+            // 배경 큐브맵 로드 및 설정
+            {
+                const loader = new THREE.CubeTextureLoader();
+                const texture = loader.load( [
+                    'blizzard_lf.jpg', 'blizzard_rt.jpg', 'blizzard_up.jpg', 
+                    'blizzard_dn.jpg', 'blizzard_ft.jpg', 'blizzard_bk.jpg'
+                ], 
+                function(texture) {
+                    texture.magFilter = THREE.LinearFilter;
+                    texture.minFilter = THREE.LinearFilter;
+                    texture.needsUpdate = true;
+                });
+                
+                scene.background = texture;
+            }
+            
+            // 로고 모델의 렌더링 컨테이너를 저장할 변수
+            let logoPivot = null; 
+
+            // GLTF 모델 로드 및 중심축 정렬
+            const loader = new GLTFLoader();
+
+            loader.load( 
+                './your_model.glb',
+                function ( gltf ) {
+                    
+                    const model = gltf.scene; 
+                    
+                    // 중심축 재설정 (Pivot Point)
+                    const box = new THREE.Box3().setFromObject( model );
+                    const center = new THREE.Vector3();
+                    box.getCenter( center );
+                    model.position.sub( center ); 
+                    
+                    const pivot = new THREE.Group();
+                    pivot.add( model );
+                    scene.add( pivot );
+                    
+                    // 로고 크기 설정 (15, 15, 15)
+                    pivot.scale.set(15, 15, 15); 
+                    
+                    cubes.push( pivot );
+                    logoPivot = pivot; // 로고 pivot 저장
+                    
+                    requestAnimationFrame( render );
+                },
+                undefined, 
+                function ( error ) {
+                    console.error( 'GLB 파일 로드 중 오류 발생:', error );
+                }
+            );
+            
+            function resizeRendererToDisplaySize( renderer ) {
+                const canvas = renderer.domElement;
+                const width = canvas.clientWidth;
+                const height = canvas.clientHeight;
+                const needResize = canvas.width !== width || canvas.height !== height;
+                if ( needResize ) {
+                    renderer.setSize( width, height, false );
+                }
+                return needResize;
+            }
+
+            function render( time ) {
+
+                time *= 0.001; 
+
+                if ( resizeRendererToDisplaySize( renderer ) ) {
+                    const canvas = renderer.domElement;
+                    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                    camera.updateProjectionMatrix();
+                }
+
+                // --- 1. 카메라 이동을 통한 배경(3차원 공간) 반응 ---
+                const sensitivity = 10; 
+                const damping = 0.05;
+                
+                camera.position.x += ( mouseX * sensitivity - camera.position.x) * damping;
+                camera.position.y += ( -mouseY * sensitivity - camera.position.y) * damping;
+                camera.lookAt(0, 0, 0); 
+
+                
+                // --- 2. 로고의 자체적인 역동적인 회전 ---
+                cubes.forEach( ( pivot ) => {
+                    
+                    pivot.rotation.y = time * 1.6; 
+                    pivot.rotation.x = Math.sin(time / 2) * 0.9; 
+                    pivot.rotation.z = Math.sin(time / 1.5) * 0.6; 
+                } );
+                
+                // --- 3. 로고 모델의 스크롤 동기화 ---
+                if (logoPivot) {
+                    // 캔버스(fixed)는 고정되어 있으므로, 로고 모델만 스크롤에 따라 위로 움직이게 합니다.
+                    const scrollYUnit = window.scrollY * 0.005; 
+                    logoPivot.position.y = +scrollYUnit;
+                }
+
+                renderer.render( scene, camera );
+
+                requestAnimationFrame( render );
+            }
+        }
+
+        main();
+
+    </script>
+
+<script>
+/* ---------------- 2D 패턴 로직 (Canvas) ---------------- */
+const canvas = document.getElementById("patternCanvas");
+const ctx = canvas.getContext("2d");
+
+const SIZE = 600;
+canvas.width = SIZE;
+canvas.height = SIZE;
+
+const TILE = 40;
+const HALF = TILE / 2;
+
+let mode = "navy";
+let shapes = [];
+
+let ellipseScale = 1.0;
+let circleScale = 1.0;
+
+/* ---------------- colors ---------------- */
+const NAVY = ['rgb(25, 30, 40)', 'rgb(40, 50, 70)', 'rgb(60, 80, 110)', 'rgb(80, 100, 130)'];
+
+let ellipseCustomColor = "#22304C";
+let circleCustomColor  = "#536DA5";
+
+let gradStartColor = "#ff9a9e";
+let gradMidColor   = "#ffffff";
+let gradEndColor   = "#fecfef";
+
+let ellipseGradientObj = null;
+let circleGradientObj = null;
+
+/* ---------------- helpers ---------------- */
+function navyCircle() { return NAVY[Math.floor(Math.random() * NAVY.length)]; }
+function navyEllipse() { return NAVY[Math.floor(Math.random() * 2)]; }
+
+function lowRandomColor() {
+  const h = 200 + Math.random() * 60;
+  const s = 15 + Math.random() * 30;
+  const l = 30 + Math.random() * 50;
+  return `hsl(${h} ${s}% ${l}%)`;
+}
+function highRandomColor() {
+  const h = Math.random() * 360;
+  const s = 70 + Math.random() * 25;
+  const l = 45 + Math.random() * 40;
+  return `hsl(${h} ${s}% ${l}%)`;
+}
+
+function updateCustomGradients() {
+  const g1 = ctx.createLinearGradient(0, 0, SIZE, SIZE);
+  g1.addColorStop(0, gradStartColor);
+  g1.addColorStop(0.5, gradMidColor);
+  g1.addColorStop(1, gradEndColor);
+  ellipseGradientObj = g1;
+
+  const g2 = ctx.createLinearGradient(SIZE, 0, 0, SIZE);
+  g2.addColorStop(0, gradStartColor);
+  g2.addColorStop(0.5, gradMidColor);
+  g2.addColorStop(1, gradEndColor);
+  circleGradientObj = g2;
+}
+
+function ellipseCol() {
+  if (mode === "navy") return navyEllipse();
+  if (mode === "low") return lowRandomColor();
+  if (mode === "high") return highRandomColor();
+  if (mode === "gradient") return ellipseGradientObj;
+  return ellipseCustomColor;
+}
+
+function circleCol() {
+  if (mode === "navy") return navyCircle();
+  if (mode === "low") return lowRandomColor();
+  if (mode === "high") return highRandomColor();
+  if (mode === "gradient") return circleGradientObj;
+  return circleCustomColor;
+}
+
+function initShapes() {
+  shapes = [];
+  for (let x = 0; x <= SIZE; x += TILE) {
+    for (let y = 0; y <= SIZE; y += TILE) {
+      const cx = x + HALF;
+      const cy = y + HALF;
+      const L = TILE * (0.4 + Math.random() * 0.2);
+      const T = TILE * (0.1 + Math.random() * 0.1);
+      const r = TILE * (0.2 + Math.random() * 0.15);
+      const jx = (Math.random() * 2 - 1) * TILE * 0.1;
+      const jy = (Math.random() * 2 - 1) * TILE * 0.1;
+      shapes.push({ x, y, cx, cy, L, T, r, jx, jy });
+    }
+  }
+}
+
+function draw() {
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, SIZE, SIZE);
+
+  shapes.forEach(s => {
+    const currentL = s.L * ellipseScale;
+    const currentT = s.T * ellipseScale;
+
+    ctx.beginPath();
+    ctx.ellipse(s.cx, s.y, currentL, currentT, 0, 0, Math.PI * 2);
+    ctx.fillStyle = ellipseCol();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.ellipse(s.x, s.cy, currentT, currentL, 0, 0, Math.PI * 2);
+    ctx.fillStyle = ellipseCol();
+    ctx.fill();
+
+    const currentR = s.r * circleScale;
+    ctx.beginPath();
+    ctx.arc(s.cx + s.jx, s.cy + s.jy, Math.max(0, currentR), 0, Math.PI * 2);
+    ctx.fillStyle = circleCol();
+    ctx.fill();
+  });
+}
+
+initShapes();
+updateCustomGradients();
+draw();
+
+/* GET STARTED & DOWNLOAD */
+document.getElementById("startBtn").onclick = () => {
+  document.getElementById("controlPanel").style.display = "flex";
+  document.getElementById("startBtn").style.display = "none";
+  // 다운로드 버튼 표시
+  document.getElementById("downloadBtn").style.display = "block";
+};
+
+// 다운로드 기능
+document.getElementById("downloadBtn").onclick = () => {
+  // 1. 가상의 링크 태그(<a>) 생성
+  const link = document.createElement('a');
+  // 2. 파일 이름 설정
+  link.download = 'my-marni-pattern.png';
+  // 3. 캔버스를 이미지 URL로 변환하여 링크에 연결
+  link.href = canvas.toDataURL();
+  // 4. 클릭 이벤트 발생시켜 다운로드 실행
+  link.click();
+};
+
+/* listeners */
+document.getElementById("ellipsePick").oninput = e => {
+  ellipseCustomColor = e.target.value; mode = "custom"; draw();
+};
+document.getElementById("circlePick").oninput = e => {
+  circleCustomColor = e.target.value; mode = "custom"; draw();
+};
+
+const applyGradient = () => {
+  gradStartColor = document.getElementById("gradStartPick").value;
+  gradMidColor = document.getElementById("gradMidPick").value;
+  gradEndColor = document.getElementById("gradEndPick").value;
+  mode = "gradient";
+  updateCustomGradients();
+  draw();
+};
+
+document.getElementById("gradStartPick").oninput = applyGradient;
+document.getElementById("gradMidPick").oninput = applyGradient;
+document.getElementById("gradEndPick").oninput = applyGradient;
+
+document.getElementById("ellipseSize").oninput = e => {
+  ellipseScale = parseFloat(e.target.value); draw();
+};
+document.getElementById("circleSize").oninput = e => {
+  circleScale = parseFloat(e.target.value); draw();
+};
+</script>
+
+</body>
+</html>
